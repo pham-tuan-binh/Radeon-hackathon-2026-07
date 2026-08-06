@@ -32,7 +32,8 @@ _Demo video: the build, the benchmarks, and the AMD-trained policy running on th
 
 ### Why I needed this
 
-For the past months I've been building a cheap, standardized robot rig called **SO-Frame**: an SO-101 arm on a linear rail, two cameras, a lightbox work surface. The thing I actually want from it
+For the past months I've been building a cheap, standardized robot rig called **SO-Frame**: an
+SO-101 arm on a linear rail, two cameras, a lightbox work surface. The thing I actually want from it
 is for the robot to learn tasks by itself in simulation, rather than me collecting demonstration
 data by hand for every new task.
 
@@ -162,7 +163,9 @@ Reading those results:
 identical results. That sounds trivial, but on a GPU it isn't. Thousands of threads writing to
 shared memory in a slightly different order every run will produce slightly different answers. If
 determinism holds, you've ruled out an entire family of race-condition bugs. This is also the test
-that caught my worst bug, a buffer-stride mismatch in my SAPIEN migration.
+that caught my worst bug: one call site in my SAPIEN migration still read rigid-body state in
+PhysX 5.3's packed 64-byte layout while everything beside it used 5.6's split 28/12/12 layout, so
+poses came out of memory at the wrong offset.
 
 **|q|−1** is a sanity check on rotations. Orientations are stored as quaternions, which must always
 have length exactly 1. If the solver is corrupting memory or accumulating error, this drifts. It
@@ -246,8 +249,8 @@ errors in contact or friction *accumulate* over an episode. A per-step tolerance
 forgive a bias that completely destroys a policy fifty steps later. A policy surviving the move to
 another vendor's physics engine is evidence that no such bias exists.
 
-It's also the test that would have caught my worst buffer-layout bug immediately, because nothing can learn
-a task from poses that are being read out of memory at the wrong offset.
+It's also the test that would have caught that buffer-layout bug immediately, because nothing can
+learn a task from poses read out of memory at the wrong offset.
 
 Training throughput was 5,797 steps/s on AMD against 11,193 on NVIDIA. That's a 1.93× gap, wider
 than the 1.67× physics gap, because training also runs neural networks and does CPU-side work, and
@@ -338,7 +341,7 @@ physics port.
 | SAC gradient updates on AMD                                                                      | **done**                            |
 | Full training run on AMD, past 11M environment steps                                             | **done**                            |
 | AMD-trained policy drives the physical rig                                                       | **done**, qualitative               |
-| Head-to-head evaluation against the NVIDIA-trained baseline                                      | not run                             |
+| Both checkpoints evaluated back to back in the same simulator                                    | not run (see §3.2 for the training-curve comparison) |
 
 **A vision-based policy trained end-to-end on a Radeon, with physics, rendering and SAC updates all on
 one card, drives the physical SO-101 rig.** The entire loop in that diagram closes on AMD hardware.
@@ -451,11 +454,11 @@ published baseline, and all 53 zero-copy buffer accessors.
 | **Warp-primitive shim** | ~886 call sites made HIP-safe (§4.5)                                        |
 | **PhysX host layer**    | CUDA driver-API surface mapped to HIP; module registration replaced         |
 | **SAPIEN**              | Migrated from PhysX 5.3's packed GPU API to 5.6's Direct GPU API (33 files) |
-| **ManiSkill**           | **Zero changes for physics.** One unrelated rendering fix                   |
+| **ManiSkill**           | **Zero changes for physics.** One upstream bug fixed in its render-device parser |
 
 I ported 257 of the 509 kernels, not all of them. The ones I skipped handle cloth, fluids,
-deformable bodies and soft-body simulation, none of which ManiSkill's rigid-body manipulation tasks ever launch
-any of them. There are exactly **247 such kernels**, which I counted from a working run rather than
+deformable bodies and soft-body simulation, none of which ManiSkill's rigid-body manipulation tasks
+ever launch. There are exactly **247 such kernels**, which I counted from a working run rather than
 guessing, because every scene logs a `[critical]` message for each one it can't find. None of them
 are fatal, and a fully passing 15/15 validation run prints all 247 of those messages, which makes a
 perfectly healthy system look alarming the first time you see it.

@@ -180,7 +180,7 @@ This is the path I run, and every number in the report came from it. About **2 h
 prebuilt kernels; add 1-3 hours to compile them from source instead.
 
 Four commands, from a box that has ROCm and nothing else to a JSON file of benchmark numbers. Run
-them from inside the clone (§0 Step 9):
+them from inside the clone (§0 Step 8):
 
 ```bash
 git clone https://github.com/pham-tuan-binh/ManiSkill.git && cd ManiSkill
@@ -318,9 +318,9 @@ moving 3.10 → 3.12 re-downloads everything and reuses nothing from the uv cach
 Rendering works, so `obs_mode="rgb"` and visual-policy training are supported. See §4.4 of the
 report for its three limits.
 
-**A worked example** is the `amd` branch of `so-frame` (`rl/environments/maniskill`), a vision-based
-SAC/DINO training project. Its only changes from `main` are dependency pins, no project source :
-and `mani_skill` stays the unmodified 3.0.1 release. Verified on hardware: GPU physics plus
+**A worked example** is the [`amd` branch of `so-frame`](https://github.com/livekit-examples/so-frame/tree/amd) (`rl/environments/maniskill`), a vision-based
+SAC/DINO training project. Its only changes from `main` are dependency pins, with no project source
+changes, and `mani_skill` stays the unmodified 3.0.1 release. Verified on hardware: GPU physics plus
 `obs_mode="rgb"` returning `(4,128,128,3)` uint8 on `cuda:0` with 220 distinct values. See
 `README-AMD.md` on that branch.
 
@@ -370,7 +370,7 @@ and `pip-freeze.txt`.
 
 ## 4. Reproducing each result in the report
 
-### 4.1 Numerical correctness (report §6.1)
+### 4.1 Numerical correctness (report §2.1)
 
 ```bash
 ./tools/amd_port/verify.sh                            # AMD
@@ -381,7 +381,7 @@ python tools/amd_port/validate_divergence_calibration.py   # the divergence anal
 Run the same two scripts on the NVIDIA box to get the reference column. Expect determinism to be
 bit-identical, worst |q|−1 ≈ 2.4e-07, and GPU-vs-CPU ≈ 1.45e-03 at 10 steps **on both**.
 
-### 4.2 Throughput (report §6.2)
+### 4.2 Throughput (report §2.2)
 
 ```bash
 cd benchmarks && uv run amd            # then, on the NVIDIA host: uv run nvidia
@@ -402,17 +402,17 @@ ROCm 7.2.4, EPYC 9334) so you have something to sanity-check against before comp
 within 4% of the 67,320 the report quotes for the W7900. Power at 1024 envs: 28.2 W idle,
 94.0 W mean under load, 271 env-steps/s/W.
 
-### 4.3 Power and energy (report §6.3)
+### 4.3 Power and energy (report §2.3)
 
 ```bash
 cd benchmarks && uv run amd --envs 4096 --seconds 120
 ```
 
-Read the report's §6.3 and §6.5 first. The measurement
+Read the report's §2.3 and §3 first. The measurement
 boundaries differ between vendors, the harness says so with every result, and `--quick` is
 explicitly _not_ a publishable power measurement.
 
-### 4.4 Policy transfer (report §6.4)
+### 4.4 Policy transfer (report §2.4)
 
 ```bash
 # Train on AMD (~4 min at 5,797 steps/s for 1.5M steps)
