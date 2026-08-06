@@ -6,7 +6,9 @@ Running ManiSkill's GPU-parallel robot simulation on AMD by porting the PhysX 5 
 solver from CUDA to HIP, then training a vision-based policy end to end on a Radeon and deploying it
 to a physical robot.
 
-[![Watch the demo](https://img.youtube.com/vi/jH5PWRnx3-Q/maxresdefault.jpg)](https://www.youtube.com/watch?v=jH5PWRnx3-Q)
+[![Watch the demo](assets/video-thumbnail.jpg)](https://www.youtube.com/watch?v=jH5PWRnx3-Q)
+
+_**Click the image to watch the demo on YouTube.**_
 
 ## Submission contents
 

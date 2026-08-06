@@ -22,9 +22,10 @@
 | **Reference platform** | NVIDIA RTX 5090, stock unpatched ManiSkill                                   |
 | **Prior work**         | [SO-Frame sim2real, established on NVIDIA before this port](https://x.com/pham_blnh/status/2083319521348362747)           |
 
-[![Watch the demo: ManiSkill GPU physics and vision-based sim2real on an AMD Radeon](https://img.youtube.com/vi/jH5PWRnx3-Q/maxresdefault.jpg)](https://www.youtube.com/watch?v=jH5PWRnx3-Q)
+[![Watch the demo: ManiSkill GPU physics and vision-based sim2real on an AMD Radeon](assets/video-thumbnail.jpg)](https://www.youtube.com/watch?v=jH5PWRnx3-Q)
 
-_Demo video: the build, the benchmarks, and the AMD-trained policy running on the physical rig._
+_**Click the image to watch the demo on YouTube.** It covers the build, the benchmarks, and the
+AMD-trained policy running on the physical rig._
 
 ---
 
