@@ -382,10 +382,10 @@ sample-efficiency penalty. A small persistent shortfall is exactly the shape tha
 is *not* is a correctness problem: a port with broken dynamics does not produce a learning curve
 that tracks the reference this closely for 11M steps.
 
-Two caveats on reading the chart. These are **training** metrics, logged during rollout collection,
-so they run noisier and lower than a clean evaluation pass would. And the two runs are different
-versions of the training code (v5 and v6), so the platform is not the only thing that differs
-between them.
+One caveat on reading the chart: these are **training** metrics, logged during rollout collection,
+so they run noisier and lower than a clean evaluation pass would. Otherwise the comparison is clean.
+The `v5` and `v6` tags are run labels, not different code, so apart from the three deviations listed
+below the platform is the only thing that differs between the two curves.
 
 **Three ways this run differs from the baseline**, all forced by hardware, all stated up front
 because each one could change the outcome:
