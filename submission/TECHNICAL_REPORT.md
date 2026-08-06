@@ -186,9 +186,16 @@ sizes, and ManiSkill's CPU physics is bit-identical across platforms on six task
 
 ![Throughput and scaling efficiency, AMD against NVIDIA](assets/throughput.png)
 
-_(PushCube-v1. NVIDIA leads by 1.59× to 1.72× at every scale. "Scaling efficiency" is throughput per
-environment relative to the 16-env case, so it shows how well each card keeps up as you pile on more
-work.)_
+| envs |  AMD W7900 | NVIDIA RTX 5090 | NVIDIA faster | scaling efficiency (AMD / NV) |
+| ---: | ---------: | --------------: | ------------: | ----------------------------: |
+|   16 |        697 |           1,201 |         1.72× |                   100% / 100% |
+|   64 |      2,641 |           4,185 |         1.59× |                     95% / 87% |
+|  256 |      8,515 |          14,377 |         1.69× |                     76% / 75% |
+| 1024 |     28,525 |          48,857 |         1.71× |                     64% / 64% |
+| 4096 | **67,320** |     **110,705** |         1.64× |                     38% / 36% |
+
+_(environment-steps/s on PushCube-v1. "Scaling efficiency" is throughput per environment relative to
+the 16-env case, so it shows how well each card keeps up as you pile on more work.)_
 
 **The flat ratio is the real result here, not the 1.67×.** If a port has one badly-behaved kernel or
 some hidden bottleneck that serialises work, it doesn't degrade gracefully. It falls off a cliff at
